@@ -1,0 +1,43 @@
+steps:
+- command: cd infrastructure/environments/sad/gcp/us-west3 && terraform plan
+  env:
+    ENVIRONMENT: sad
+    REGION: us-west3
+  label: Terraform Plan for Region us-west3 in sad environment
+  plugins:
+  - avaly/gcp-secret-manager#v1.1.1:
+      env:
+        LOGS_PROVIDER_PASSWORD: LOGS_PROVIDER_PASSWORD_SAD_US_WEST3
+        METRICS_PROVIDER_PASSWORD: METRICS_PROVIDER_PASSWORD_SAD_US_WEST3
+- command: cd infrastructure/environments/sad/aws/us-east-2 && terraform plan
+  env:
+    ENVIRONMENT: sad
+    REGION: us-east-2
+  label: Terraform Plan for Region us-east-2 in sad environment
+  plugins:
+  - github.com/seek-oss/aws-sm-buildkite-plugin#v2.3.2:
+      env:
+        LOGS_PROVIDER_PASSWORD: LOGS_PROVIDER_PASSWORD_SAD_US_EAST_2
+        METRICS_PROVIDER_PASSWORD: METRICS_PROVIDER_PASSWORD_SAD_US_EAST_2
+- block: Release
+  prompt: Please unblock the pipeline
+- command: cd infrastructure/environments/sad/gcp/us-west3 && terraform apply
+  env:
+    ENVIRONMENT: sad
+    REGION: us-west3
+  label: Terraform Apply for Region us-west3 in sad environment
+  plugins:
+  - avaly/gcp-secret-manager#v1.1.1:
+      env:
+        LOGS_PROVIDER_PASSWORD: LOGS_PROVIDER_PASSWORD_SAD_US_WEST3
+        METRICS_PROVIDER_PASSWORD: METRICS_PROVIDER_PASSWORD_SAD_US_WEST3
+- command: cd infrastructure/environments/sad/aws/us-east-2 && terraform apply
+  env:
+    ENVIRONMENT: sad
+    REGION: us-east-2
+  label: Terraform Apply for Region us-east-2 in sad environment
+  plugins:
+  - github.com/seek-oss/aws-sm-buildkite-plugin#v2.3.2:
+      env:
+        LOGS_PROVIDER_PASSWORD: LOGS_PROVIDER_PASSWORD_SAD_US_EAST_2
+        METRICS_PROVIDER_PASSWORD: METRICS_PROVIDER_PASSWORD_SAD_US_EAST_2
